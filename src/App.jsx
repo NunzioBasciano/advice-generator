@@ -1,32 +1,47 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
 import Card from './components/card/Card.jsx'
-import adviceArray from './components/data/advice.jsx'
+
 
 function App() {
 
   const [message, setMessage] = useState(1);
+  const [isClicked, setIsClicked] = useState(false);
 
-  function handleClick(e) {
-    if (e.target.id) {
-      setMessage(randomNumber())
+
+  const handleClick = () => {
+    setIsClicked(!isClicked);
+
+  }
+
+  const handleMessage = async () => {
+
+    try {
+      const data = await fetch(
+        'https://api.adviceslip.com/advice'
+      );
+      const res = await data.json();
+      const advice = res.slip
+      setMessage(advice);
+
+    } catch (error) {
+
+      console.log(error);
     }
   }
 
-  function randomNumber() {
-    return Math.floor(Math.random() * 10) + 1;
-  }
-
-  const currentAdvice = adviceArray.find(advice => advice.id === message);
-  const title = currentAdvice.id;
-  const description = currentAdvice.advice;
+  useEffect(() => {
+    handleMessage();
+  }, [isClicked])
 
   return (
 
     <Card
-      title={title}
-      description={description}
+      title={message.id}
+      description={message.advice}
       onClick={handleClick}
+      isClicked={isClicked}
+      setIsClicked={setIsClicked}
     />
   )
 }
