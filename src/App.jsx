@@ -8,10 +8,8 @@ function App() {
   const [message, setMessage] = useState(1);
   const [isClicked, setIsClicked] = useState(false);
 
-
   const handleClick = () => {
     setIsClicked(!isClicked);
-
   }
 
   const handleMessage = async () => {
